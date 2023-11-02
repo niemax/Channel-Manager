@@ -1,15 +1,15 @@
 export type Hotel = {
-  id: string
+  id: number
   name: string
 }
 
 export type Channel = {
-  id: string
+  id: number
   name: string
 }
 
 export type HotelChannel = {
-  hotelId: string
-  channelId: string
+  hotelId: number
+  channelId: number
   visible: number
 }

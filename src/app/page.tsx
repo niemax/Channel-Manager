@@ -3,9 +3,9 @@ import Header from "./_components/Header"
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col ">
+    <main className="min-h-screen">
       <Header />
-      <div className="p-4">
+      <div className="max-w-3xl mx-auto mt-6">
         <ChannelManager />
       </div>
     </main>

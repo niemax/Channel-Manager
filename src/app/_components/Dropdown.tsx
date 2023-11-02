@@ -1,5 +1,4 @@
 import { Hotel, HotelChannel } from "@/types/general"
-import { trpc } from "@/utils/trpc"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 const UpChevron = () => {

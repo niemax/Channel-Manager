@@ -3,28 +3,31 @@ import React, { useEffect, useState } from "react"
 import Dropdown from "./Dropdown"
 import { trpc } from "@/utils/trpc"
 import { Hotel } from "@/types/general"
+import ChannelsList from "./ChannelsList"
+import Spinner from "./Spinner"
 
 export default function ChannelManager() {
   const [selectedHotel, setSelectedHotel] = useState<Hotel>()
   const hotels = trpc.getHotels.useQuery()
-  const hotelChannels = trpc.getHotelChannels.useQuery(
-    selectedHotel?.id as number
-  )
+  const hotelChannels = trpc.getHotelChannels.useQuery(selectedHotel?.id)
 
   useEffect(() => {
     if (hotels?.data) {
-      setSelectedHotel(hotels?.data[0])
+      const firstHotel = hotels.data[0]
+      if (firstHotel) {
+        setSelectedHotel(firstHotel as Hotel)
+      }
     }
-  }, [])
+  }, [hotels.data])
 
-  useEffect(() => {
-    console.log(selectedHotel)
-    console.log(hotelChannels?.data)
-  }, [selectedHotel])
-
-  if (hotels.status === "loading") return <div>Loading...</div>
-
-  if (hotels.status === "error") return <div>Error: {hotels.error.message}</div>
+  if (hotels.error)
+    return (
+      <div>
+        <h1>Channel manager</h1>
+        <div className="text-red-500">{hotels.error.message}</div>
+        <button onClick={() => hotels.refetch()}>Retry</button>
+      </div>
+    )
 
   return (
     <div>
@@ -33,9 +36,13 @@ export default function ChannelManager() {
         <Dropdown
           hotels={hotels?.data as Hotel[]}
           selectedHotel={selectedHotel as Hotel}
-          setSelectedHotel={setSelectedHotel}
+          setSelectedHotel={setSelectedHotel as any}
         />
-        <p>List of hotel channels here</p>
+        {hotelChannels.isLoading ? (
+          <Spinner />
+        ) : (
+          <ChannelsList channels={hotelChannels?.data} />
+        )}
       </div>
     </div>
   )

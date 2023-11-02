@@ -64,6 +64,7 @@ export const appRouter = router({
   }),
   getHotelChannels: publicProcedure.input(z.number()).query(async (opts) => {
     const { input } = opts
+    console.log("input", input)
 
     const fetchedHotelChannels = await db
       .select()
@@ -79,7 +80,11 @@ export const appRouter = router({
         .where(eq(channels.id, hc.channelId))
 
       if (channel) {
-        fetchedChannels.push({ ...channel, visible: hc.visible })
+        fetchedChannels.push({
+          ...channel[0],
+          name: channel[0].name,
+          visible: hc.visible,
+        })
       }
     }
 

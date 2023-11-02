@@ -1,10 +1,9 @@
-import Image from "next/image";
+import ChannelsList from "./_components/ChannelsList"
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      {/*     CHANNELS HERE
-       */}
+      <ChannelsList />
     </main>
-  );
+  )
 }

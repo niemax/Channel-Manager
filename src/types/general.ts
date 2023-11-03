@@ -9,6 +9,7 @@ export type Channel = {
 }
 
 export type HotelChannel = {
+  channelName: string
   hotelId: number
   channelId: number
   visible: number

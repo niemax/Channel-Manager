@@ -1,0 +1,1 @@
+ALTER TABLE hotel_channels ADD `channel_name` text;

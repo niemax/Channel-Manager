@@ -1,23 +1,21 @@
-"use client"
-import { channels } from "@/db/schema"
-import { Channel } from "@/types/general"
-import { trpc } from "@/utils/trpc"
+import { HotelChannel } from "@/types/general"
 import React from "react"
 import ChannelRow from "./ChannelRow"
+import Spinner from "./Spinner"
 
-// TODO: fix type
 interface ChannelsListProps {
-  channels: any
+  hotelChannels: HotelChannel[]
+  isFetchingMoreHotelChannels: boolean
 }
 
-export default function ChannelsList({ channels }: ChannelsListProps) {
+export default function ChannelsList({
+  hotelChannels,
+  isFetchingMoreHotelChannels,
+}: ChannelsListProps) {
   return (
-    <table
-      className="table-auto w-full border-[1px] rounded-xl px-3"
-      aria-label="channels_table"
-    >
+    <table className="table-auto w-full px-3" aria-label="channels_table">
       <thead>
-        <tr className="flex flex-row justify-between px-3 py-2 bg-gray-50">
+        <tr className="flex flex-row justify-between px-3 py-2 bg-gray-50 rounded-t-lg border-[1px]">
           <th scope="col" className="text-sm font-semibold">
             Channel
           </th>
@@ -26,14 +24,16 @@ export default function ChannelsList({ channels }: ChannelsListProps) {
           </th>
         </tr>
       </thead>
-      <tbody className="border-t-[1px]">
-        {channels?.map((channel: Channel) => (
-          <tr key={channel.id}>
+      <tbody className="border-[1px] rounded-b-lg border-t-0">
+        {hotelChannels?.map((hc: HotelChannel) => (
+          <tr key={hc.hotelId}>
             <td>
-              <ChannelRow key={channel.id} channel={channel} />
+              <ChannelRow key={hc.hotelId} hotelChannel={hc} />
             </td>
           </tr>
         ))}
+        {isFetchingMoreHotelChannels && <Spinner />}
+        <tr id="loadMore" />
       </tbody>
     </table>
   )

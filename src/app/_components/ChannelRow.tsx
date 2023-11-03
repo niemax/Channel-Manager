@@ -1,16 +1,20 @@
-import { Channel } from "@/types/general"
+import { HotelChannel } from "@/types/general"
 import React from "react"
 import Toggle from "./Toggle"
 
 interface ChannelRowProps {
-  channel: Channel
+  hotelChannel: HotelChannel
 }
 
-export default function ChannelRow({ channel }: ChannelRowProps) {
+export default function ChannelRow({ hotelChannel }: ChannelRowProps) {
   return (
     <div className="flex flex-row justify-between items-center border-b-[1px] border-gray-200 px-3 py-2">
-      <p>{channel?.name}</p>
-      <Toggle />
+      <p>{hotelChannel?.channelName}</p>
+      <Toggle
+        isChecked={hotelChannel.visible === 0 ? false : true}
+        hotelId={hotelChannel.hotelId}
+        channelId={hotelChannel.channelId}
+      />
     </div>
   )
 }

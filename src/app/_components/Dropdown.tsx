@@ -1,5 +1,5 @@
-import { Hotel, HotelChannel } from "@/types/general"
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { Hotel } from "@/types/general"
+import React, { Dispatch, SetStateAction, memo, useState } from "react"
 
 const UpChevron = () => {
   return (
@@ -38,7 +38,7 @@ const DownChevron = () => {
 }
 
 interface DropdownProps {
-  hotels: Hotel[]
+  hotels: Set<Hotel>
   selectedHotel: Hotel
   setSelectedHotel: Dispatch<SetStateAction<Hotel>>
 }
@@ -50,12 +50,17 @@ export default function Dropdown({
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
 
-  const renderChevron = () => {
+  function renderChevron() {
     if (isOpen) {
       return <UpChevron />
     } else {
       return <DownChevron />
     }
+  }
+
+  function handleHotelChange(hotel: Hotel) {
+    setSelectedHotel(hotel)
+    setIsOpen(false)
   }
 
   return (
@@ -80,16 +85,13 @@ export default function Dropdown({
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            {hotels?.map((hotel: Hotel) => (
+            {[...hotels]?.map((hotel: Hotel) => (
               <a
                 key={hotel.id}
                 href="#"
                 className="block px-4 py-2 text-sm text-alternativeFontLight hover:bg-gray-100 hover:text-gray-900"
                 role="menuitem"
-                onClick={() => {
-                  setSelectedHotel(hotel)
-                  setIsOpen(false)
-                }}
+                onClick={() => handleHotelChange(hotel)}
               >
                 {hotel.name}
               </a>

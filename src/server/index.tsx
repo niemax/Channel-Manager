@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm"
+import { and, eq, gt } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/better-sqlite3"
 import { migrate } from "drizzle-orm/better-sqlite3/migrator"
 import Database from "better-sqlite3"
@@ -39,6 +39,7 @@ async function seedData() {
         await db.insert(hotelChannels).values({
           hotelId: hotel.id,
           channelId: channel.id,
+          channelName: channel.name,
           visible: 0,
         })
       }
@@ -62,35 +63,39 @@ export const appRouter = router({
   getChannels: publicProcedure.query(async () => {
     return await db.select().from(channels).all()
   }),
-  getHotelChannels: publicProcedure.input(z.number()).query(async (opts) => {
-    const { input } = opts
-    console.log("input", input)
+  getHotelChannels: publicProcedure
+    .input(
+      z.object({
+        hotelId: z.number(),
+        limit: z.number(),
+        cursor: z.number().optional(),
+      })
+    )
+    .query(async (opts) => {
+      const { input } = opts
 
-    const fetchedHotelChannels = await db
-      .select()
-      .from(hotelChannels)
-      .where(eq(hotelChannels.hotelId, input))
-      .all()
-
-    const fetchedChannels = []
-    for (let hc of fetchedHotelChannels) {
-      const channel = await db
+      const fetchedHotelChannels = await db
         .select()
-        .from(channels)
-        .where(eq(channels.id, hc.channelId))
-
-      if (channel) {
-        fetchedChannels.push({
-          ...channel[0],
-          name: channel[0].name,
-          visible: hc.visible,
+        .from(hotelChannels)
+        .where((hotelChannels) => {
+          if (input.cursor) {
+            return and(
+              eq(hotelChannels.hotelId, input.hotelId),
+              gt(hotelChannels.channelId, input.cursor)
+            )
+          } else {
+            return eq(hotelChannels.hotelId, input.hotelId)
+          }
         })
-      }
-    }
+        .limit(input.limit)
+        .all()
 
-    return fetchedChannels
-  }),
-  /*   changeHotelChannelVisibility: publicProcedure
+      const cursor =
+        fetchedHotelChannels[fetchedHotelChannels.length - 1]?.channelId
+
+      return { data: fetchedHotelChannels, cursor }
+    }),
+  changeHotelChannelVisibility: publicProcedure
     .input(
       z.object({
         hotelId: z.number(),
@@ -102,13 +107,15 @@ export const appRouter = router({
       await db
         .update(hotelChannels)
         .set({ visible: opts.input.visible })
-        .where({
-          hotelId: opts.input.hotelId,
-          channelId: opts.input.channelId,
-        })
+        .where(
+          and(
+            eq(hotelChannels.hotelId, opts.input.hotelId),
+            eq(hotelChannels.channelId, opts.input.channelId)
+          )
+        )
         .run()
       return true
-    }), */
+    }),
   /*   addChannel: publicProcedure.input(z.string()).mutation(async (opts) => {
     await db.insert(channels).values({ name: opts.input, visible: 0 }).run()
     return true

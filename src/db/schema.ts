@@ -14,4 +14,5 @@ export const hotelChannels = sqliteTable("hotel_channels", {
   hotelId: integer("hotel_id").references(() => hotels.id),
   channelId: integer("channel_id").references(() => channels.id),
   visible: integer("visible").default(0),
+  channelName: text("channel_name"),
 })

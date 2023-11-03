@@ -15,6 +15,13 @@
       "when": 1698925675240,
       "tag": "0001_lovely_omega_flight",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698952816510,
+      "tag": "0002_tired_lionheart",
+      "breakpoints": true
     }
   ]
 }

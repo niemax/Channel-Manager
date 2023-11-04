@@ -45,20 +45,23 @@ export default function SearchField({
         Query for {hotelName} visibility on channel
       </label>
       <input
-        className="border border-grayDark rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-productBlue focus:border-transparent"
+        className={`border ${
+          hotelVisibility.isFetching
+            ? "focus:outline-none focus:ring-4 focus:ring-yellow-600 focus:border-transparent animate-pulse"
+            : "border-darkGray"
+        } rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-productBlue focus:border-transparent`}
         type="text"
         placeholder="Enter the name of channel"
         value={searchTerm}
         onChange={onChange}
       />
-      {hotelVisibility.isFetching ? <Spinner /> : null}
       {hotelVisibility.data?.length ? (
         <p
-          className={`text-sm font-medium ${
-            hotelIsVisible ? "text-green-500" : "text-red-300"
+          className={`text-lg font-medium ${
+            hotelIsVisible ? "text-green-500" : "text-red-600"
           }`}
         >
-          {hotelVisibility.data?.[0]?.visible === 1 ? "visible" : "not visible"}
+          {hotelVisibility.data?.[0]?.visible === 1 ? "Visible" : "Not visible"}
         </p>
       ) : null}
     </div>

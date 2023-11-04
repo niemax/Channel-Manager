@@ -1,8 +1,7 @@
 import useDebounce from "@/hooks/useDebounce"
 import { trpc } from "@/utils/trpc"
-import React, { ChangeEvent, Dispatch, useEffect, useState } from "react"
+import React, { ChangeEvent, Dispatch } from "react"
 import Spinner from "./Spinner"
-import { HotelChannel } from "@/types/general"
 
 interface SearchFieldProps {
   hotelName: string
@@ -17,7 +16,7 @@ export default function SearchField({
   searchTerm,
   setSearchTerm,
 }: SearchFieldProps) {
-  /*   const hotelVisibility = trpc.checkVisibilityOfHotelOnChannel.useQuery(
+  const hotelVisibility = trpc.checkVisibilityOfHotelOnChannel.useQuery(
     {
       hotelId: hotelId,
       channelName: searchTerm,
@@ -29,14 +28,16 @@ export default function SearchField({
 
   const debouncedRequest = useDebounce(() => {
     hotelVisibility.refetch()
-  }) */
+  })
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchTerm(value)
+
+    debouncedRequest()
   }
 
-  //const hotelIsVisible = hotelVisibility.data?.[0]?.visible === 1
+  const hotelIsVisible = hotelVisibility.data?.[0]?.visible === 1
 
   return (
     <div className="flex flex-col space-y-1 py-1">
@@ -44,13 +45,13 @@ export default function SearchField({
         Query for {hotelName} visibility on channel
       </label>
       <input
-        className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-productBlue focus:border-transparent"
+        className="border border-grayDark rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-productBlue focus:border-transparent"
         type="text"
         placeholder="Enter the name of channel"
         value={searchTerm}
         onChange={onChange}
       />
-      {/* {hotelVisibility.isFetching ? <Spinner /> : null}
+      {hotelVisibility.isFetching ? <Spinner /> : null}
       {hotelVisibility.data?.length ? (
         <p
           className={`text-sm font-medium ${
@@ -59,7 +60,7 @@ export default function SearchField({
         >
           {hotelVisibility.data?.[0]?.visible === 1 ? "visible" : "not visible"}
         </p>
-      ) : null} */}
+      ) : null}
     </div>
   )
 }

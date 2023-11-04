@@ -1,3 +1,4 @@
+import { colors } from "@/theme/foundation"
 import { Hotel } from "@/types/general"
 import React, { Dispatch, SetStateAction, useMemo } from "react"
 import Select from "react-select"
@@ -15,7 +16,7 @@ export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
         label: hotel.name,
       })) ?? []
 
-    const defaultValue = options?.find((option) => option.label === "Hotel A")
+    const defaultValue = options?.find((option) => option.label === "Hotel 1")
 
     return [options, defaultValue]
   }, [hotels])
@@ -27,11 +28,29 @@ export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
   return (
     <div className="w-[275px]">
       {options.length ? (
-        <Select
-          options={options}
-          defaultValue={defaultValue}
-          onChange={(option) => handleHotelChange(option?.value as Hotel)}
-        />
+        <div className="space-y-[4px]">
+          <label className="font-semibold text-sm">Hotel</label>
+          <Select
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary: colors.productBlue,
+              },
+            })}
+            styles={{
+              control: (baseStyles) => ({
+                ...baseStyles,
+                height: 40,
+                borderRadius: 10,
+                fontSize: "1rem",
+              }),
+            }}
+            options={options}
+            defaultValue={defaultValue}
+            onChange={(option) => handleHotelChange(option?.value as Hotel)}
+          />
+        </div>
       ) : null}
     </div>
   )

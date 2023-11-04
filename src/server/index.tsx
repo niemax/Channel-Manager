@@ -14,11 +14,11 @@ const db = drizzle(betterSqlite)
 migrate(db, { migrationsFolder: "drizzle" })
 
 async function seedData() {
-  const hotelNames = ["Hotel A", "Hotel B", "Hotel C", "Hotel D", "Hotel E"]
+  console.log("seeding")
   const hotelsCount = await db.select().from(hotels).all().length
   if (!hotelsCount) {
-    for (let i = 0; i < hotelNames.length; i++) {
-      await db.insert(hotels).values({ name: hotelNames[i] })
+    for (let i = 1; i <= 100; i++) {
+      await db.insert(hotels).values({ name: `Hotel ${i}` })
     }
   }
 
@@ -47,8 +47,18 @@ async function seedData() {
   }
 }
 
+async function deleteAllData() {
+  console.log("deleting all data")
+  await db.delete(hotelChannels)
+  await db.delete(hotels)
+  await db.delete(channels)
+}
+
+//deleteAllData().catch((error) => console.error("Failed to delete data:", error))
+
 seedData().catch((error) => console.error("Failed to seed data:", error))
 
+// PROCEDURES
 const getHotelChannelsProcedure = publicProcedure
   .input(
     z.object({
@@ -104,6 +114,28 @@ const changeHotelChannelVisibilityProcedure = publicProcedure
     return true
   })
 
+const checkVisibilityOfHotelOnChannelProcedure = publicProcedure
+  .input(
+    z.object({
+      hotelId: z.number(),
+      channelName: z.string(),
+    })
+  )
+  .query(async (opts) => {
+    const { input } = opts
+
+    return await db
+      .select()
+      .from(hotelChannels)
+      .where(
+        and(
+          eq(hotelChannels.hotelId, input.hotelId),
+          eq(hotelChannels.channelName, input.channelName)
+        )
+      )
+      .all()
+  })
+
 export const appRouter = router({
   getHotels: publicProcedure.query(async () => {
     return await db.select().from(hotels).all()
@@ -113,27 +145,7 @@ export const appRouter = router({
   }),
   getHotelChannels: getHotelChannelsProcedure,
   changeHotelChannelVisibility: changeHotelChannelVisibilityProcedure,
-  checkVisibilityOfHotelOnChannel: publicProcedure
-    .input(
-      z.object({
-        hotelId: z.number(),
-        channelName: z.string(),
-      })
-    )
-    .query(async (opts) => {
-      const { input } = opts
-
-      return await db
-        .select()
-        .from(hotelChannels)
-        .where(
-          and(
-            eq(hotelChannels.hotelId, input.hotelId),
-            eq(hotelChannels.channelName, input.channelName)
-          )
-        )
-        .all()
-    }),
+  checkVisibilityOfHotelOnChannel: checkVisibilityOfHotelOnChannelProcedure,
 })
 
 export type AppRouter = typeof appRouter

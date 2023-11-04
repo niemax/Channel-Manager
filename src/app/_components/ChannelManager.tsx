@@ -65,12 +65,6 @@ export default function ChannelManager() {
         hotels={new Set(hotels?.data) as Set<Hotel>}
         setSelectedHotel={setSelectedHotel}
       />
-      <SearchField
-        hotelName={selectedHotel?.name as string}
-        hotelId={selectedHotel?.id as number}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
       {hotelChannels.error && (
         <Error
           errorMessage={hotelChannels.error.message}
@@ -80,15 +74,24 @@ export default function ChannelManager() {
       {hotelChannels.isFetching && !hotelChannels.data ? (
         <Spinner />
       ) : (
-        <ChannelsList
-          key={selectedHotel?.id}
-          isFetchingMoreHotelChannels={hotelChannels.isFetchingNextPage}
-          hotelChannels={
-            (hotelChannels?.data?.pages.flatMap(
-              (page) => page.data
-            ) as HotelChannel[]) ?? []
-          }
-        />
+        <>
+          <SearchField
+            hotelName={selectedHotel?.name as string}
+            hotelId={selectedHotel?.id as number}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
+
+          <ChannelsList
+            key={selectedHotel?.id}
+            isFetchingMoreHotelChannels={hotelChannels.isFetchingNextPage}
+            hotelChannels={
+              (hotelChannels?.data?.pages.flatMap(
+                (page) => page.data
+              ) as HotelChannel[]) ?? []
+            }
+          />
+        </>
       )}
     </div>
   )

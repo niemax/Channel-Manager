@@ -47,14 +47,62 @@ async function seedData() {
   }
 }
 
-async function deleteAllData() {
-  await db.delete(hotelChannels).run()
-  await db.delete(channels).run()
-  await db.delete(hotels).run()
-}
-//deleteAllData()
-
 seedData().catch((error) => console.error("Failed to seed data:", error))
+
+const getHotelChannelsProcedure = publicProcedure
+  .input(
+    z.object({
+      hotelId: z.number(),
+      limit: z.number().optional().default(10),
+      cursor: z.number().optional(),
+    })
+  )
+  .query(async (opts) => {
+    const { input } = opts
+
+    const fetchedHotelChannels = await db
+      .select()
+      .from(hotelChannels)
+      .where((hotelChannels) => {
+        if (input.cursor) {
+          return and(
+            eq(hotelChannels.hotelId, input.hotelId),
+            gt(hotelChannels.channelId, input.cursor)
+          )
+        } else {
+          return eq(hotelChannels.hotelId, input.hotelId)
+        }
+      })
+      .limit(input.limit)
+      .all()
+
+    const cursor =
+      fetchedHotelChannels[fetchedHotelChannels.length - 1]?.channelId
+
+    return { data: fetchedHotelChannels, cursor }
+  })
+
+const changeHotelChannelVisibilityProcedure = publicProcedure
+  .input(
+    z.object({
+      hotelId: z.number(),
+      channelId: z.number(),
+      visible: z.number(),
+    })
+  )
+  .mutation(async (opts) => {
+    await db
+      .update(hotelChannels)
+      .set({ visible: opts.input.visible })
+      .where(
+        and(
+          eq(hotelChannels.hotelId, opts.input.hotelId),
+          eq(hotelChannels.channelId, opts.input.channelId)
+        )
+      )
+      .run()
+    return true
+  })
 
 export const appRouter = router({
   getHotels: publicProcedure.query(async () => {
@@ -63,78 +111,29 @@ export const appRouter = router({
   getChannels: publicProcedure.query(async () => {
     return await db.select().from(channels).all()
   }),
-  getHotelChannels: publicProcedure
+  getHotelChannels: getHotelChannelsProcedure,
+  changeHotelChannelVisibility: changeHotelChannelVisibilityProcedure,
+  checkVisibilityOfHotelOnChannel: publicProcedure
     .input(
       z.object({
         hotelId: z.number(),
-        limit: z.number(),
-        cursor: z.number().optional(),
+        channelName: z.string(),
       })
     )
     .query(async (opts) => {
       const { input } = opts
 
-      const fetchedHotelChannels = await db
+      return await db
         .select()
         .from(hotelChannels)
-        .where((hotelChannels) => {
-          if (input.cursor) {
-            return and(
-              eq(hotelChannels.hotelId, input.hotelId),
-              gt(hotelChannels.channelId, input.cursor)
-            )
-          } else {
-            return eq(hotelChannels.hotelId, input.hotelId)
-          }
-        })
-        .limit(input.limit)
-        .all()
-
-      const cursor =
-        fetchedHotelChannels[fetchedHotelChannels.length - 1]?.channelId
-
-      return { data: fetchedHotelChannels, cursor }
-    }),
-  changeHotelChannelVisibility: publicProcedure
-    .input(
-      z.object({
-        hotelId: z.number(),
-        channelId: z.number(),
-        visible: z.number(),
-      })
-    )
-    .mutation(async (opts) => {
-      await db
-        .update(hotelChannels)
-        .set({ visible: opts.input.visible })
         .where(
           and(
-            eq(hotelChannels.hotelId, opts.input.hotelId),
-            eq(hotelChannels.channelId, opts.input.channelId)
+            eq(hotelChannels.hotelId, input.hotelId),
+            eq(hotelChannels.channelName, input.channelName)
           )
         )
-        .run()
-      return true
+        .all()
     }),
-  /*   addChannel: publicProcedure.input(z.string()).mutation(async (opts) => {
-    await db.insert(channels).values({ name: opts.input, visible: 0 }).run()
-    return true
-  }),
-  changeVisibility: publicProcedure
-    .input(
-      z.object({
-        id: z.number(),
-        visible: z.number(),
-      })
-    )
-    .mutation(async (opts) => {
-      await db
-        .update(channels)
-        .set({ visible: opts.input.done })
-        .where(eq(channels.id, opts.input.id))
-        .run()
-      return true
-    }), */
 })
 
 export type AppRouter = typeof appRouter

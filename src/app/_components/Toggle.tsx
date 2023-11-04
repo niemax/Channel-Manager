@@ -15,19 +15,22 @@ export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
   const [isToggled, setToggled] = useState(isChecked)
   const { toggle, visible } = useModal()
 
-  const getHotelChannels = trpc.getHotelChannels.useQuery(hotelId)
+  const hotelChannels = trpc.getHotelChannels.useQuery({
+    hotelId: hotelId,
+  })
   const changeHotelChannelVisibility =
     trpc.changeHotelChannelVisibility.useMutation({
       onSuccess: () => {
-        getHotelChannels.refetch()
+        hotelChannels.refetch()
       },
       onError: (error) => {
         console.log(error)
+        throw new Error("Error changing hotel channel visibility")
       },
     })
 
   const handleToggle = () => {
-    toggle()
+    setToggled(!isToggled)
     changeHotelChannelVisibility.mutate({
       hotelId: hotelId,
       channelId: channelId,

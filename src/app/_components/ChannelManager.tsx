@@ -1,16 +1,20 @@
 "use client"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useState } from "react"
 import Dropdown from "./Dropdown"
 import { trpc } from "@/utils/trpc"
 import { Hotel, HotelChannel } from "@/types/general"
 import ChannelsList from "./ChannelsList"
 import Spinner from "./Spinner"
+import SearchField from "./SearchField"
+import Error from "./Error"
 
 export default function ChannelManager() {
   const [selectedHotel, setSelectedHotel] = useState<Hotel>()
+  const [searchTerm, setSearchTerm] = useState("")
+
   const hotels = trpc.getHotels.useQuery()
   const hotelChannels = trpc.getHotelChannels.useInfiniteQuery(
-    { hotelId: selectedHotel?.id as number, limit: 10 },
+    { hotelId: selectedHotel?.id as number },
     {
       getNextPageParam: (lastPage) => lastPage.cursor,
     }
@@ -37,7 +41,7 @@ export default function ChannelManager() {
             }
           }
         },
-        { threshold: 1 } // trigger callback when any part of the element is visible
+        { threshold: 1 }
       )
 
       observer.observe(target)
@@ -48,11 +52,10 @@ export default function ChannelManager() {
 
   if (hotels.error)
     return (
-      <div>
-        <h1>Channel manager</h1>
-        <div className="text-red-500">{hotels.error.message}</div>
-        <button onClick={() => hotels.refetch()}>Retry</button>
-      </div>
+      <Error
+        errorMessage={hotels.error.message}
+        retryFunction={() => hotels.refetch()}
+      />
     )
 
   return (
@@ -60,9 +63,20 @@ export default function ChannelManager() {
       <h1>Channel manager</h1>
       <Dropdown
         hotels={new Set(hotels?.data) as Set<Hotel>}
-        selectedHotel={selectedHotel as Hotel}
-        setSelectedHotel={setSelectedHotel as any}
+        setSelectedHotel={setSelectedHotel}
       />
+      <SearchField
+        hotelName={selectedHotel?.name as string}
+        hotelId={selectedHotel?.id as number}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+      {hotelChannels.error && (
+        <Error
+          errorMessage={hotelChannels.error.message}
+          retryFunction={() => hotelChannels.refetch()}
+        />
+      )}
       {hotelChannels.isFetching && !hotelChannels.data ? (
         <Spinner />
       ) : (

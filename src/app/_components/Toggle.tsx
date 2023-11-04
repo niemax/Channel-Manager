@@ -8,9 +8,15 @@ interface ToggleProps {
   isChecked: boolean
   hotelId: number
   channelId: number
+  channelName: string
 }
 
-export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
+export default function Toggle({
+  isChecked,
+  hotelId,
+  channelId,
+  channelName,
+}: ToggleProps) {
   const [isToggled, setToggled] = useState(isChecked)
   const { toggle, visible } = useModal()
   const utils = trpc.useUtils()
@@ -20,6 +26,7 @@ export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
       onSuccess: () => {
         utils.getHotelChannels.invalidate()
         setToggled(!isToggled)
+        visible && toggle()
       },
       onError: (error) => {
         console.log(error)
@@ -27,13 +34,12 @@ export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
       },
     })
 
-  const handleToggle = () => {
+  const mutationAction = () =>
     changeHotelChannelVisibility.mutate({
       hotelId: hotelId,
       channelId: channelId,
       visible: isToggled ? 0 : 1,
     })
-  }
 
   return (
     <>
@@ -43,15 +49,17 @@ export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
           checkedIcon={false}
           onColor="#0050FF"
           offColor="#CBD5E1"
-          onChange={handleToggle}
+          onChange={toggle}
           checked={isToggled}
         />
       </label>
       <Modal
         visible={visible}
         toggle={toggle}
-        title="Are you sure?"
-        modalText="This action cannot be undone."
+        title={`${isToggled ? "Hide" : "Show"} hotel on ${channelName}`}
+        modalText="Are you sure?"
+        action={mutationAction}
+        isLoading={changeHotelChannelVisibility.isLoading}
       />
     </>
   )

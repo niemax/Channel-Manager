@@ -6,13 +6,15 @@ import React, { useState } from "react"
 import getBaseUrl from "@/utils/getBaseURL"
 import { trpc } from "@/utils/trpc"
 
+const CACHE_TIME = 1000 * 60 * 3
+
 export default function Provider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            refetchOnWindowFocus: false,
+            cacheTime: CACHE_TIME,
           },
         },
       })

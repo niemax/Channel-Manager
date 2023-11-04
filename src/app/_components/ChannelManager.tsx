@@ -8,8 +8,6 @@ import Spinner from "./Spinner"
 import SearchField from "./SearchField"
 import Error from "./Error"
 
-const CACHE_TIME = 0
-
 export default function ChannelManager() {
   const [selectedHotel, setSelectedHotel] = useState<Hotel>()
   const [searchTerm, setSearchTerm] = useState("")

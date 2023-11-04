@@ -14,6 +14,7 @@ export default function ChannelRow({ hotelChannel }: ChannelRowProps) {
         isChecked={hotelChannel.visible === 0 ? false : true}
         hotelId={hotelChannel.hotelId}
         channelId={hotelChannel.channelId}
+        channelName={hotelChannel.channelName}
       />
     </div>
   )

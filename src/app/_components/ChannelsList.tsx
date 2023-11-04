@@ -36,7 +36,7 @@ export default function ChannelsList({
           <tr id="loadMore" />
         </tbody>
       </table>
-      {isFetchingMoreHotelChannels && <Spinner />}
+      {isFetchingMoreHotelChannels && <Spinner width="w-6" height="h-6" />}
     </>
   )
 }

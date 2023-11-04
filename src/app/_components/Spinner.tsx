@@ -1,11 +1,19 @@
 import React from "react"
 
-export default function Spinner() {
+interface SpinnerProps {
+  width?: string
+  height?: string
+}
+
+export default function Spinner({
+  width = "w-12",
+  height = "w-12",
+}: SpinnerProps) {
   return (
     <div role="status" className="flex items-center justify-center">
       <svg
         aria-hidden="true"
-        className="w-5 h-5 mr-2 animate-spin dark:text-gray-600 fill-productBlue"
+        className={`${width} ${height} animate-spin dark:text-gray-600 fill-productBlue`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

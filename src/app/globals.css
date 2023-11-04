@@ -37,9 +37,10 @@ body {
 
 .modalPop {
   background-color: #fefefe;
-  margin: 5% auto; /* 15% from the top and centered */
+  margin: 5% auto; 
   padding: 20px;
-  width: 70%; /* Could be more or less, depending on screen size */
+  width: 30%; 
+  border-radius: 15px;
 
   @media (max-width: 768px) {
     width: 90%;
@@ -50,11 +51,4 @@ body {
   text-align: left;
 }
 
-.closeButton {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5625rem;
-  cursor: pointer;
-}
 

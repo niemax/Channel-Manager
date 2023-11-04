@@ -1,9 +1,8 @@
 import { trpc } from "@/utils/trpc"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import Switch from "react-switch"
 import Modal from "./Modal"
 import useModal from "@/hooks/useModal"
-import { useCloseWithEsc } from "@/hooks/useCloseWithEsc"
 
 interface ToggleProps {
   isChecked: boolean
@@ -14,14 +13,13 @@ interface ToggleProps {
 export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
   const [isToggled, setToggled] = useState(isChecked)
   const { toggle, visible } = useModal()
+  const utils = trpc.useUtils()
 
-  const hotelChannels = trpc.getHotelChannels.useQuery({
-    hotelId: hotelId,
-  })
   const changeHotelChannelVisibility =
     trpc.changeHotelChannelVisibility.useMutation({
       onSuccess: () => {
-        hotelChannels.refetch()
+        utils.getHotelChannels.invalidate()
+        setToggled(!isToggled)
       },
       onError: (error) => {
         console.log(error)
@@ -30,7 +28,6 @@ export default function Toggle({ isChecked, hotelId, channelId }: ToggleProps) {
     })
 
   const handleToggle = () => {
-    setToggled(!isToggled)
     changeHotelChannelVisibility.mutate({
       hotelId: hotelId,
       channelId: channelId,

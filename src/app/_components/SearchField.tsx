@@ -34,7 +34,7 @@ export default function SearchField({
     const value = e.target.value
     setSearchTerm(value)
 
-    debouncedRequest()
+    value.length > 0 && debouncedRequest()
   }
 
   const hotelIsVisible = hotelVisibility.data?.[0]?.visible === 1

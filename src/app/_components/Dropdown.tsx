@@ -16,7 +16,7 @@ export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
         label: hotel.name,
       })) ?? []
 
-    const defaultValue = options?.find((option) => option.label === "Hotel 1")
+    const defaultValue = options?.[0]
 
     return [options, defaultValue]
   }, [hotels])
@@ -29,8 +29,12 @@ export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
     <div className="w-[275px]">
       {options.length ? (
         <div className="space-y-[4px]">
-          <label className="font-semibold text-sm">Hotel</label>
+          <label htmlFor="dropdown" className="font-semibold text-sm">
+            Hotel
+          </label>
           <Select
+            id="dropdown"
+            aria-label="Select hotel"
             theme={(theme) => ({
               ...theme,
               colors: {

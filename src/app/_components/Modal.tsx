@@ -21,7 +21,12 @@ const Modal = ({
   visible
     ? ReactDOM.createPortal(
         <div className="modal">
-          <div className="modalPop" role="dialog" aria-modal="true">
+          <div
+            className="modalPop"
+            role="dialog"
+            aria-label="confirmation modal"
+            aria-modal="true"
+          >
             <h2 className="font-bold text-xl">{title}</h2>
             <div className="textWrapper">
               <p>{modalText}</p>

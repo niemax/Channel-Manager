@@ -43,14 +43,16 @@ export default function Toggle({
 
   return (
     <>
-      <label>
+      <label htmlFor={`switch-${channelId}`}>
         <Switch
+          id={`switch-${channelId}`}
           uncheckedIcon={false}
           checkedIcon={false}
           onColor="#0050FF"
           offColor="#CBD5E1"
           onChange={toggle}
           checked={isToggled}
+          aria-label={`Toggle visibility of ${channelName} on ${channelName}`}
         />
       </label>
       <Modal

@@ -68,28 +68,33 @@ const getHotelChannelsProcedure = publicProcedure
     })
   )
   .query(async (opts) => {
-    const { input } = opts
+    try {
+      const { input } = opts
 
-    const fetchedHotelChannels = await db
-      .select()
-      .from(hotelChannels)
-      .where((hotelChannels) => {
-        if (input.cursor) {
-          return and(
-            eq(hotelChannels.hotelId, input.hotelId),
-            gt(hotelChannels.channelId, input.cursor)
-          )
-        } else {
-          return eq(hotelChannels.hotelId, input.hotelId)
-        }
-      })
-      .limit(input.limit)
-      .all()
+      const fetchedHotelChannels = await db
+        .select()
+        .from(hotelChannels)
+        .where((hotelChannels) => {
+          if (input.cursor) {
+            return and(
+              eq(hotelChannels.hotelId, input.hotelId),
+              gt(hotelChannels.channelId, input.cursor)
+            )
+          } else {
+            return eq(hotelChannels.hotelId, input.hotelId)
+          }
+        })
+        .limit(input.limit)
+        .all()
 
-    const cursor =
-      fetchedHotelChannels[fetchedHotelChannels.length - 1]?.channelId
+      const cursor =
+        fetchedHotelChannels[fetchedHotelChannels.length - 1]?.channelId
 
-    return { data: fetchedHotelChannels, cursor }
+      return { data: fetchedHotelChannels, cursor }
+    } catch (error) {
+      console.error("Failed to get hotel channels:", error)
+      throw error
+    }
   })
 
 const changeHotelChannelVisibilityProcedure = publicProcedure
@@ -100,18 +105,23 @@ const changeHotelChannelVisibilityProcedure = publicProcedure
       visible: z.number(),
     })
   )
-  .mutation(async (opts) => {
-    await db
-      .update(hotelChannels)
-      .set({ visible: opts.input.visible })
-      .where(
-        and(
-          eq(hotelChannels.hotelId, opts.input.hotelId),
-          eq(hotelChannels.channelId, opts.input.channelId)
+  .mutation(async ({ input }) => {
+    try {
+      await db
+        .update(hotelChannels)
+        .set({ visible: input.visible })
+        .where(
+          and(
+            eq(hotelChannels.hotelId, input.hotelId),
+            eq(hotelChannels.channelId, input.channelId)
+          )
         )
-      )
-      .run()
-    return true
+        .run()
+      return true
+    } catch (error) {
+      console.error("Failed to change hotel channel visibility:", error)
+      throw error
+    }
   })
 
 const checkVisibilityOfHotelOnChannelProcedure = publicProcedure
@@ -121,19 +131,22 @@ const checkVisibilityOfHotelOnChannelProcedure = publicProcedure
       channelName: z.string(),
     })
   )
-  .query(async (opts) => {
-    const { input } = opts
-
-    return await db
-      .select()
-      .from(hotelChannels)
-      .where(
-        and(
-          eq(hotelChannels.hotelId, input.hotelId),
-          eq(hotelChannels.channelName, input.channelName)
+  .query(async ({ input }) => {
+    try {
+      return await db
+        .select()
+        .from(hotelChannels)
+        .where(
+          and(
+            eq(hotelChannels.hotelId, input.hotelId),
+            eq(hotelChannels.channelName, input.channelName)
+          )
         )
-      )
-      .all()
+        .all()
+    } catch (error) {
+      console.error("Failed to check visibility of hotel on channel:", error)
+      throw error
+    }
   })
 
 export const appRouter = router({

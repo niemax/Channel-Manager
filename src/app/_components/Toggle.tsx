@@ -3,6 +3,8 @@ import React, { useState } from "react"
 import Switch from "react-switch"
 import Modal from "./Modal"
 import useModal from "@/hooks/useModal"
+import { useTheme } from "next-themes"
+import { colors } from "@/theme/foundation"
 
 interface ToggleProps {
   isChecked: boolean
@@ -18,6 +20,7 @@ export default function Toggle({
   channelName,
 }: ToggleProps) {
   const [isToggled, setToggled] = useState(isChecked)
+  const { theme } = useTheme()
   const { toggle, visible } = useModal()
   const utils = trpc.useUtils()
 
@@ -41,6 +44,8 @@ export default function Toggle({
       visible: isToggled ? 0 : 1,
     })
 
+  const isDark = theme === "dark"
+
   return (
     <>
       <label htmlFor={`switch-${channelId}`}>
@@ -49,7 +54,7 @@ export default function Toggle({
           uncheckedIcon={false}
           checkedIcon={false}
           onColor="#0050FF"
-          offColor="#CBD5E1"
+          offColor={isDark ? colors.grayLight : colors.grayDark}
           onChange={toggle}
           checked={isToggled}
           aria-label={`Toggle visibility of ${channelName} on ${channelName}`}

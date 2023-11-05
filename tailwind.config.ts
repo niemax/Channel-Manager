@@ -9,20 +9,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        fontDark: "#FFFFFF",
-        fontLight: "#000000",
-        alternativeFontLight: "#16181B",
+        white: "#FFFFFF",
+        black: "#000000",
+        alternativeBlack: "#16181B",
         productBlue: "#0050FF",
         productBlueOpaque: "rgba(0, 80, 255, 0.2)",
         grayDark: "#CBD5E1",
         grayLight: "#334155",
       },
     },
-    variants: {
-      backgroundColor: [`light`],
-      textColor: [`light`],
-    },
   },
+  darkMode: ["class"],
   plugins: [],
 }
 export default config

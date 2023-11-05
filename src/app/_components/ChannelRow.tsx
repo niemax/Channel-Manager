@@ -8,8 +8,10 @@ interface ChannelRowProps {
 
 export default function ChannelRow({ hotelChannel }: ChannelRowProps) {
   return (
-    <div className="flex flex-row justify-between items-center border-b-[1px] border-gray-200 px-3 py-2">
-      <p>{hotelChannel?.channelName}</p>
+    <div className="flex flex-row justify-between items-center border-b-[1px] border-gray-200 dark:border-neutral-700 px-4 py-2">
+      <p className="text-slate-700 dark:text-white">
+        {hotelChannel?.channelName}
+      </p>
       <Toggle
         isChecked={hotelChannel.visible === 0 ? false : true}
         hotelId={hotelChannel.hotelId}

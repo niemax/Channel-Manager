@@ -1,7 +1,6 @@
 import useDebounce from "@/hooks/useDebounce"
 import { trpc } from "@/utils/trpc"
 import React, { ChangeEvent, Dispatch } from "react"
-import Spinner from "./Spinner"
 
 interface SearchFieldProps {
   hotelName: string
@@ -48,7 +47,7 @@ export default function SearchField({
         className={`border ${
           hotelVisibility.isFetching
             ? "focus:outline-none focus:ring-4 focus:ring-yellow-600 focus:border-transparent animate-pulse"
-            : "border-darkGray"
+            : "border-darkGray dark:border-neutral-700 bg-white dark:bg-alternativeBlack"
         } rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-productBlue focus:border-transparent`}
         type="text"
         placeholder="Enter the name of channel"

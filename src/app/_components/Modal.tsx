@@ -22,7 +22,7 @@ const Modal = ({
     ? ReactDOM.createPortal(
         <div className="modal">
           <div
-            className="modalPop"
+            className="modalPop bg-white dark:bg-alternativeBlack"
             role="dialog"
             aria-label="confirmation modal"
             aria-modal="true"

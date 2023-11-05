@@ -5,6 +5,7 @@ import React, { useState } from "react"
 
 import getBaseUrl from "@/utils/getBaseURL"
 import { trpc } from "@/utils/trpc"
+import { ThemeProvider } from "next-themes"
 
 const CACHE_TIME = 1000 * 60 * 3
 
@@ -30,7 +31,11 @@ export default function Provider({ children }: { children: React.ReactNode }) {
   )
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </QueryClientProvider>
     </trpc.Provider>
   )
 }

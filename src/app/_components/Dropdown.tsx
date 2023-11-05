@@ -1,5 +1,6 @@
 import { colors } from "@/theme/foundation"
 import { Hotel } from "@/types/general"
+import { useTheme } from "next-themes"
 import React, { Dispatch, SetStateAction, useMemo } from "react"
 import Select from "react-select"
 
@@ -29,27 +30,17 @@ export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
     <div className="w-[275px]">
       {options.length ? (
         <div className="space-y-[4px]">
-          <label htmlFor="dropdown" className="font-semibold text-sm">
+          <label
+            htmlFor="dropdown"
+            className="font-semibold text-sm text-alternativeFontLight dark:text-white"
+          >
             Hotel
           </label>
           <Select
+            className="my-react-select-container"
+            classNamePrefix="my-react-select"
             id="dropdown"
             aria-label="Select hotel"
-            theme={(theme) => ({
-              ...theme,
-              colors: {
-                ...theme.colors,
-                primary: colors.productBlue,
-              },
-            })}
-            styles={{
-              control: (baseStyles) => ({
-                ...baseStyles,
-                height: 40,
-                borderRadius: 10,
-                fontSize: "1rem",
-              }),
-            }}
             options={options}
             defaultValue={defaultValue}
             onChange={(option) => handleHotelChange(option?.value as Hotel)}

@@ -4,15 +4,43 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
+  --background-color: #fff;
 }
 
  @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 255, 255, 255;
+    --background-color: #000;
   }
 } 
+
+@layer components {
+  .my-react-select-container .my-react-select__control {
+    @apply bg-white dark:bg-alternativeBlack rounded-lg border-[1px] h-[40px] border-grayDark dark:border-neutral-800;
+  }
+
+  .my-react-select-container .my-react-select__menu {
+    @apply bg-white dark:bg-alternativeBlack border-neutral-300 dark:border-neutral-600;
+  }
+
+  .my-react-select-container .my-react-select__option {
+    @apply text-neutral-600 dark:text-neutral-200 bg-white hover:bg-productBlue hover:text-white dark:bg-alternativeBlack;
+  }
+
+   .my-react-select-container .my-react-select__option--is-focused {
+    @apply dark:bg-productBlue;
+  } 
+
+  .my-react-select-container .my-react-select__indicator-separator {
+    @apply bg-neutral-600;
+  }
+
+  .my-react-select-container .my-react-select__input-container,
+  .my-react-select-container .my-react-select__placeholder,
+  .my-react-select-container .my-react-select__single-value {
+    @apply text-alternativeBlack dark:text-neutral-200;
+  }
+}
 
 h1 {
   font-size: 24px;
@@ -36,7 +64,6 @@ body {
 }
 
 .modalPop {
-  background-color: #fefefe;
   margin: 5% auto; 
   padding: 20px;
   width: 30%; 

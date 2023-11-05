@@ -5,6 +5,7 @@ import Modal from "./Modal"
 import useModal from "@/hooks/useModal"
 import { useTheme } from "next-themes"
 import { colors } from "@/theme/foundation"
+import { useCloseWithEsc } from "@/hooks/useCloseWithEsc"
 
 interface ToggleProps {
   isChecked: boolean

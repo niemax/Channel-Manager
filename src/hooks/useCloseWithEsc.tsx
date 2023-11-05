@@ -1,13 +1,13 @@
 import { useEffect } from "react"
 
-export const useCloseWithEsc = (close: () => void) => {
+export const useCloseWithEsc = (visible: boolean, close: () => void) => {
   return useEffect(() => {
-    const toggle = (e: KeyboardEvent) => {
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        toggle()
+        visible && close()
       }
     }
-    window.addEventListener("keydown", close)
-    return () => window.removeEventListener("keydown", close)
+    window.addEventListener("keydown", handleEsc)
+    return () => window.removeEventListener("keydown", handleEsc)
   }, [close])
 }

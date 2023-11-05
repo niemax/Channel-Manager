@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom"
 import Spinner from "./Spinner"
+import { useCloseWithEsc } from "@/hooks/useCloseWithEsc"
 
 interface ModalProps {
   visible: boolean
@@ -17,8 +18,10 @@ const Modal = ({
   title,
   action,
   isLoading,
-}: ModalProps) =>
-  visible
+}: ModalProps) => {
+  useCloseWithEsc(visible, toggle)
+
+  return visible
     ? ReactDOM.createPortal(
         <div className="modal">
           <div
@@ -40,7 +43,7 @@ const Modal = ({
                 onClick={() => {
                   action()
                 }}
-                className={`self-center rounded-md py-3 px-8 border-[1px] border-productBlue bg-productBlueOpaque shadow-md transition duration-500 hover:scale-110 text-productBlue`}
+                className={`self-center rounded-md py-3 px-8 border-[1px] border-productBlue bg-productBlueOpaque shadow-md transition duration-500 hover:scale-110 text-productBlue dark:text-blue-300`}
               >
                 {isLoading ? <Spinner width="w-6" height="h-6" /> : "Confirm"}
               </button>
@@ -50,5 +53,5 @@ const Modal = ({
         document.body
       )
     : null
-
+}
 export default Modal

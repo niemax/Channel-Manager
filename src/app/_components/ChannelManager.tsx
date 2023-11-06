@@ -30,6 +30,12 @@ export default function ChannelManager() {
   }, [hotels.data])
 
   useEffect(() => {
+    if (searchTerm.length) {
+      setSearchTerm("")
+    }
+  }, [selectedHotel])
+
+  useEffect(() => {
     const target = document.querySelector("#loadMore")
 
     if (target) {

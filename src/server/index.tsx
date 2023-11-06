@@ -1,4 +1,4 @@
-import { and, eq, gt } from "drizzle-orm"
+import { and, eq, gt, like } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/better-sqlite3"
 import { migrate } from "drizzle-orm/better-sqlite3/migrator"
 import Database from "better-sqlite3"
@@ -151,6 +151,8 @@ const checkVisibilityOfHotelOnChannelProcedure = publicProcedure
     })
   )
   .query(async ({ input }) => {
+    const channelToLowerCase = input.channelName.toLowerCase()
+
     try {
       return await db
         .select()
@@ -158,7 +160,7 @@ const checkVisibilityOfHotelOnChannelProcedure = publicProcedure
         .where(
           and(
             eq(hotelChannels.hotelId, input.hotelId),
-            eq(hotelChannels.channelName, input.channelName)
+            eq(like(hotelChannels.channelName, channelToLowerCase), 1)
           )
         )
         .all()

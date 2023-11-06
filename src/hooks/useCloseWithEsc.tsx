@@ -9,5 +9,5 @@ export const useCloseWithEsc = (visible: boolean, close: () => void) => {
     }
     window.addEventListener("keydown", handleEsc)
     return () => window.removeEventListener("keydown", handleEsc)
-  }, [close])
+  }, [close, visible])
 }

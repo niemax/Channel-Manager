@@ -1,6 +1,4 @@
-import { colors } from "@/theme/foundation"
 import { Hotel } from "@/types/general"
-import { useTheme } from "next-themes"
 import React, { Dispatch, SetStateAction, useMemo } from "react"
 import Select from "react-select"
 
@@ -22,9 +20,7 @@ export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
     return [options, defaultValue]
   }, [hotels])
 
-  const handleHotelChange = (hotel: Hotel) => {
-    setSelectedHotel(hotel)
-  }
+  const handleHotelChange = (hotel: Hotel) => setSelectedHotel(hotel)
 
   return (
     <div className="w-[275px]">

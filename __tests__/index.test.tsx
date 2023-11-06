@@ -2,8 +2,15 @@ import "@testing-library/jest-dom"
 import { appRouter, db } from "@/server"
 import { and, eq } from "drizzle-orm"
 import { hotelChannels } from "@/db/schema"
+import { act, fireEvent, render, screen } from "@testing-library/react"
+import Header from "@/app/_components/Header"
+import { ThemeSwitcher } from "@/app/_components/ThemeToggle"
+import { ThemeProvider } from "next-themes"
 
-// DATABASE TESTS
+/**
+ * ! API (INTEGRATION) TESTS
+ * ? Provides some basic tests for the API
+ */
 const caller = appRouter.createCaller({ session: null, req: null, res: null })
 const HOTELS_LENGTH = 100,
   CHANNELS_LENGTH = 100,
@@ -48,4 +55,49 @@ test("changeHotelChannelVisibility and checkVisibilityOfHotelOnChannel", async (
   expect(visibility[0].visible).toBe(1)
 })
 
-// UI TESTS
+/**
+ * ! COMPONENT TESTS
+ * ? Provides some basic tests for the components
+ */
+describe("Header", () => {
+  it("renders the header", () => {
+    render(<Header />)
+    expect(screen.getByTestId("header")).toBeInTheDocument()
+  })
+})
+
+describe("ThemeSwitcher", () => {
+  beforeAll(() => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: jest.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      })),
+    })
+  })
+
+  it("toggles theme on click", async () => {
+    const { getByTestId } = render(
+      <ThemeProvider attribute="class" defaultTheme="dark">
+        <ThemeSwitcher />
+      </ThemeProvider>
+    )
+
+    const button = getByTestId("theme-switcher")
+
+    expect(button.textContent).toBe("Light")
+
+    await act(async () => {
+      fireEvent.click(button)
+    })
+
+    expect(button.textContent).toBe("Dark")
+  })
+})

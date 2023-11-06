@@ -8,13 +8,15 @@ import { publicProcedure, router } from "./trpc"
 
 import { channels, hotels, hotelChannels } from "@/db/schema"
 
-const betterSqlite = new Database("sqlite.db")
-const db = drizzle(betterSqlite)
+const betterSqlite = new Database(
+  process.env.NODE_ENV === "test" ? "test.db" : "sqlite.db"
+)
+export const db = drizzle(betterSqlite)
 
 migrate(db, { migrationsFolder: "drizzle" })
 
-async function seedData() {
-  console.log("seeding")
+export async function seedData() {
+  console.log("populating data...")
   const hotelsCount = await db.select().from(hotels).all().length
   if (!hotelsCount) {
     for (let i = 1; i <= 100; i++) {
@@ -47,11 +49,11 @@ async function seedData() {
   }
 }
 
-async function deleteAllData() {
+export async function deleteAllData() {
   console.log("deleting all data")
-  await db.delete(hotelChannels)
-  await db.delete(hotels)
-  await db.delete(channels)
+  await db.delete(hotelChannels).run()
+  await db.delete(hotels).run()
+  await db.delete(channels).run()
 }
 
 //deleteAllData().catch((error) => console.error("Failed to delete data:", error))

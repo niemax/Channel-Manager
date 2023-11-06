@@ -59,7 +59,7 @@ export default function ChannelManager() {
     )
 
   return (
-    <div className="space-y-5 px-4 md:px-0">
+    <div className="space-y-5 px-4 md:px-0" data-testid="channel-manager">
       <h1>Channel manager</h1>
       <Dropdown
         hotels={new Set(hotels?.data) as Set<Hotel>}

@@ -13,7 +13,7 @@ function debounce(callback: () => void, wait: number) {
 }
 
 export default function useDebounce(callbackFn: () => void) {
-  const ref = useRef()
+  const ref = useRef<() => void>()
 
   useEffect(() => {
     ref.current = callbackFn

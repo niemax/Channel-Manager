@@ -32,7 +32,7 @@ export default function Toggle({
         visible && toggle()
       },
       onError: (error) => {
-        console.log(error)
+        console.error(error)
         throw new Error("Error changing hotel channel visibility")
       },
     })

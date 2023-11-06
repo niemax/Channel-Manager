@@ -33,6 +33,7 @@ export default function ChannelManager() {
     if (searchTerm.length) {
       setSearchTerm("")
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedHotel])
 
   useEffect(() => {

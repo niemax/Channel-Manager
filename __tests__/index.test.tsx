@@ -6,6 +6,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react"
 import Header from "@/app/_components/Header"
 import { ThemeSwitcher } from "@/app/_components/ThemeToggle"
 import { ThemeProvider } from "next-themes"
+import Error from "@/app/_components/Error"
 
 /**
  * ! API (INTEGRATION) TESTS
@@ -99,5 +100,30 @@ describe("ThemeSwitcher", () => {
     })
 
     expect(button.textContent).toBe("Dark")
+  })
+})
+
+describe("Error Component", () => {
+  it("renders correctly when an error occurs", () => {
+    const errorMessage = "Test message"
+    render(<Error errorMessage={errorMessage} retryFunction={() => {}} />)
+
+    expect(screen.getByText(errorMessage)).toBeInTheDocument()
+    expect(screen.getByTestId("retry")).toBeInTheDocument()
+  })
+
+  it("calls retryFunction on button click", async () => {
+    const mockRetryFunction = jest.fn()
+
+    const { getByTestId } = render(
+      <Error
+        errorMessage="Test Error Message"
+        retryFunction={mockRetryFunction}
+      />
+    )
+
+    fireEvent.click(getByTestId("retry"))
+
+    expect(mockRetryFunction).toHaveBeenCalled()
   })
 })

@@ -9,6 +9,7 @@ interface DropdownProps {
 
 export default function Dropdown({ hotels, setSelectedHotel }: DropdownProps) {
   const [options, defaultValue] = useMemo(() => {
+    // map through the options to provide right data structure for React-Select component
     const options =
       [...hotels].map((hotel) => ({
         value: hotel,

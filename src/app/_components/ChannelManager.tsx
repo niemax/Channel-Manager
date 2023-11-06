@@ -8,6 +8,18 @@ import Spinner from "./Spinner"
 import SearchField from "./SearchField"
 import Error from "./Error"
 
+interface SkeletonProps {
+  width?: string
+}
+
+const Skeleton = ({ width = "3/4" }: SkeletonProps) => (
+  <div className="animate-pulse">
+    <div
+      className={`w-${width} h-10 bg-gray-300 dark:bg-gray-700 rounded-md`}
+    />
+  </div>
+)
+
 export default function ChannelManager() {
   const [selectedHotel, setSelectedHotel] = useState<Hotel>()
   const [searchTerm, setSearchTerm] = useState("")
@@ -66,8 +78,17 @@ export default function ChannelManager() {
     )
 
   return (
-    <div className="space-y-5 px-4 md:px-0" data-testid="channel-manager">
+    <div
+      className="space-y-5 px-4 md:px-0 h-screen"
+      data-testid="channel-manager"
+    >
       <h1>Channel manager</h1>
+      {hotels.isFetching && !hotels.data?.length && (
+        <div className="space-y-10 pt-8">
+          <Skeleton width="3/4" />
+          <Skeleton width="full" />
+        </div>
+      )}
       <Dropdown
         hotels={new Set(hotels?.data) as Set<Hotel>}
         setSelectedHotel={setSelectedHotel}
@@ -79,7 +100,9 @@ export default function ChannelManager() {
         />
       )}
       {hotelChannels.isFetching && !hotelChannels.data ? (
-        <Spinner />
+        <div className="py-20">
+          <Spinner />
+        </div>
       ) : (
         <>
           <SearchField

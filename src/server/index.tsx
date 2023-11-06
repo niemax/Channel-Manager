@@ -20,7 +20,12 @@ export async function seedData() {
   const hotelsCount = await db.select().from(hotels).all().length
   if (!hotelsCount) {
     for (let i = 1; i <= 100; i++) {
-      await db.insert(hotels).values({ name: `Hotel ${i}` })
+      try {
+        await db.insert(hotels).values({ name: `Hotel ${i}` })
+      } catch (error) {
+        console.error(error)
+        throw error
+      }
     }
   }
 
@@ -28,7 +33,12 @@ export async function seedData() {
 
   if (!channelsCount) {
     for (let i = 1; i <= 100; i++) {
-      await db.insert(channels).values({ name: `Channel ${i}` })
+      try {
+        await db.insert(channels).values({ name: `Channel ${i}` })
+      } catch (error) {
+        console.error(error)
+        throw error
+      }
     }
   }
 
@@ -38,12 +48,17 @@ export async function seedData() {
     const allChannels = await db.select().from(channels).all()
     for (let hotel of allHotels) {
       for (let channel of allChannels) {
-        await db.insert(hotelChannels).values({
-          hotelId: hotel.id,
-          channelId: channel.id,
-          channelName: channel.name,
-          visible: 0,
-        })
+        try {
+          await db.insert(hotelChannels).values({
+            hotelId: hotel.id,
+            channelId: channel.id,
+            channelName: channel.name,
+            visible: 0,
+          })
+        } catch (error) {
+          console.error(error)
+          throw error
+        }
       }
     }
   }
@@ -51,9 +66,13 @@ export async function seedData() {
 
 export async function deleteAllData() {
   console.log("deleting all data")
-  await db.delete(hotelChannels).run()
-  await db.delete(hotels).run()
-  await db.delete(channels).run()
+  try {
+    await db.delete(hotelChannels).run()
+    await db.delete(hotels).run()
+    await db.delete(channels).run()
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 //deleteAllData().catch((error) => console.error("Failed to delete data:", error))
@@ -69,10 +88,8 @@ const getHotelChannelsProcedure = publicProcedure
       cursor: z.number().optional(),
     })
   )
-  .query(async (opts) => {
+  .query(async ({ input }) => {
     try {
-      const { input } = opts
-
       const fetchedHotelChannels = await db
         .select()
         .from(hotelChannels)

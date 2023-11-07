@@ -33,13 +33,13 @@ export default function SearchField({
     const value = e.target.value
     setSearchTerm(value)
 
-    if (!value.length) return
-
-    debouncedRequest()
+    value.length > 2 && debouncedRequest()
   }
 
   const renderResultText = () => {
-    return hotelVisibility.isFetched && !hotelVisibility.data?.length ? (
+    return hotelVisibility.isFetched &&
+      !hotelVisibility.data?.length &&
+      searchTerm.length > 0 ? (
       <p className="text-lg font-medium text-red-600">Not found</p>
     ) : hotelVisibility.data?.length ? (
       <p
@@ -61,7 +61,7 @@ export default function SearchField({
       </label>
       <input
         className={`border ${
-          hotelVisibility.isFetching
+          !hotelVisibility?.data?.length && hotelVisibility.isFetching
             ? "focus:outline-none focus:ring-4 focus:ring-yellow-600 focus:border-transparent animate-pulse border-yellow-600"
             : "border-darkGray dark:border-neutral-700 bg-white dark:bg-alternativeBlack"
         } ${

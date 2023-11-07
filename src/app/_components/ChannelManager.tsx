@@ -7,18 +7,7 @@ import ChannelsList from "./ChannelsList"
 import Spinner from "./Spinner"
 import SearchField from "./SearchField"
 import Error from "./Error"
-
-interface SkeletonProps {
-  width?: string
-}
-
-const Skeleton = ({ width = "3/4" }: SkeletonProps) => (
-  <div className="animate-pulse">
-    <div
-      className={`w-${width} h-10 bg-gray-300 dark:bg-gray-700 rounded-md`}
-    />
-  </div>
-)
+import Skeleton from "./Skeleton"
 
 export default function ChannelManager() {
   const [selectedHotel, setSelectedHotel] = useState<Hotel>()
@@ -85,8 +74,8 @@ export default function ChannelManager() {
       <h1>Channel manager</h1>
       {hotels.isFetching && !hotels.data?.length && (
         <div className="space-y-10 pt-8">
-          <Skeleton width="3/4" />
-          <Skeleton width="full" />
+          <Skeleton />
+          <Skeleton width="w-full" />
         </div>
       )}
       <Dropdown

@@ -33,7 +33,7 @@ export default function SearchField({
     const value = e.target.value
     setSearchTerm(value)
 
-    value.length > 2 && debouncedRequest()
+    value.length > 0 && debouncedRequest()
   }
 
   const renderResultText = () => {

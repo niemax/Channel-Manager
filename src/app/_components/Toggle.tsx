@@ -5,6 +5,8 @@ import Modal from "./Modal"
 import useModal from "@/hooks/useModal"
 import { useTheme } from "next-themes"
 import { colors } from "@/theme/foundation"
+import { TRPCClientError } from "@trpc/client"
+import { AppRouter } from "@/server"
 
 interface ToggleProps {
   isChecked: boolean
@@ -24,8 +26,8 @@ export default function Toggle({
   const { toggle, visible } = useModal()
   const utils = trpc.useUtils()
 
-  const changeHotelChannelVisibility =
-    trpc.changeHotelChannelVisibility.useMutation({
+  const changeHotelVisibilityOnChannel =
+    trpc.changeHotelVisibilityOnChannel.useMutation({
       onSuccess: () => {
         utils.getHotelChannels.invalidate()
         setToggled(!isToggled)
@@ -38,7 +40,7 @@ export default function Toggle({
     })
 
   const mutationAction = () =>
-    changeHotelChannelVisibility.mutate({
+    changeHotelVisibilityOnChannel.mutate({
       hotelId: hotelId,
       channelId: channelId,
       visible: isToggled ? 0 : 1,
@@ -66,7 +68,10 @@ export default function Toggle({
         title={`${isToggled ? "Hide" : "Show"} hotel on ${channelName}`}
         modalText="Are you sure?"
         action={mutationAction}
-        isLoading={changeHotelChannelVisibility.isLoading}
+        isLoading={changeHotelVisibilityOnChannel.isLoading}
+        error={
+          changeHotelVisibilityOnChannel.error as TRPCClientError<AppRouter>
+        }
       />
     </>
   )

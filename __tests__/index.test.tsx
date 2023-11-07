@@ -37,8 +37,8 @@ test("getHotelChannels returns channels for a hotel", async () => {
   expect(hotelChannels.cursor).toBe(HOTEL_CHANNELS_CURSOR)
 })
 
-test("changeHotelChannelVisibility and checkVisibilityOfHotelOnChannel", async () => {
-  await caller.changeHotelChannelVisibility({
+test("changeHotelVisibilityOnChannel and checkVisibilityOfHotelOnChannel", async () => {
+  await caller.changeHotelVisibilityOnChannel({
     hotelId: 1,
     channelId: 1,
     visible: 1,

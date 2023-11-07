@@ -112,7 +112,7 @@ const getHotelChannelsProcedure = publicProcedure
     }
   })
 
-const changeHotelChannelVisibilityProcedure = publicProcedure
+const changeHotelVisibilityOnChannelProcedure = publicProcedure
   .input(
     z.object({
       hotelId: z.number(),
@@ -174,7 +174,7 @@ export const appRouter = router({
     return await db.select().from(channels).all()
   }),
   getHotelChannels: getHotelChannelsProcedure,
-  changeHotelChannelVisibility: changeHotelChannelVisibilityProcedure,
+  changeHotelVisibilityOnChannel: changeHotelVisibilityOnChannelProcedure,
   checkVisibilityOfHotelOnChannel: checkVisibilityOfHotelOnChannelProcedure,
 })
 

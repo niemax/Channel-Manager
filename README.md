@@ -20,13 +20,13 @@ See more here: <br />
 **First, clone the project:**
 
 ```bash
-git clone https://github.com/niemax/mp_assignment.git
+git clone https://github.com/niemax/Channel-Manager.git
 ```
 
 **Navigate to the project folder:**
 
 ```bash
-cd mp_assignment
+cd Channel-Manager
 ```
 
 **Install dependencies:**

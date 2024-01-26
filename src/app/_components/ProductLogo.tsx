@@ -7,8 +7,8 @@ export default function ProductLogo() {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 48 48"
-        width="60px"
-        height="60px"
+        width="40px"
+        height="40px"
       >
         <path
           fill="#64b5f6"

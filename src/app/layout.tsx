@@ -7,7 +7,7 @@ const nunito = Nunito({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Channel Manager",
-  description: "Meeting package channel manager",
+  description: "Channel manager",
 }
 
 export default function RootLayout({

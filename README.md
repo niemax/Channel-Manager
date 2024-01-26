@@ -1,6 +1,6 @@
 ## Overview
 
-This project is bootstrapped with `create-next-app` with Typescript and is using the NextJS app router. The reason I chose to go with NextJS is that I wanted the implementation to simulate a real-world scenario by building an actual backend with tRPC, SQLite (better-sqlite3) and Drizzle ORM, and setting up a serverless backend was easy with Next and it goes exceptionally well with tRPC since both frontend and backend is Typescript. Also, the job description stated that NextJS and tRPC would be something that could potentially be used in the future so I wanted to dig deeper into that.
+This project is bootstrapped with `create-next-app` with Typescript and is using the NextJS app router. The reason I chose to go with NextJS is that I wanted the implementation to simulate a real-world scenario by building an actual backend with tRPC, SQLite (better-sqlite3) and Drizzle ORM, and setting up a serverless backend was easy with Next and it goes exceptionally well with tRPC since both frontend and backend is Typescript. 
 
 For the backend I have seeded some actual data to the database to simulate a real use-case **(100 hotels and 100 channels)**.
 

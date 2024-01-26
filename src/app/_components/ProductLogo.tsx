@@ -4,10 +4,6 @@ import { useTheme } from "next-themes"
 import React from "react"
 
 export default function ProductLogo() {
-  const { theme } = useTheme()
-
-  const fillColor = theme === "dark" ? "#FFF" : "#16181B"
-
   return (
     <div className="flex flex-row spacing-x-2 items-center">
       <svg
